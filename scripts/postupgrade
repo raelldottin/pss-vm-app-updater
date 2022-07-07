@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# Load the launch daemon
+/bin/launchctl load -wF /Library/LaunchDaemons/com.syncpool.app-downloader.plist
+
+exit 0
