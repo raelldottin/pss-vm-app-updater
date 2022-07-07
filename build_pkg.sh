@@ -219,7 +219,7 @@ signed_package() {
 
 how_to_install_remotely() {
         print_log "Copy the package on a macOS remote host: scp \"${PARENT_DIR}/build/${1}-signed-${VERSION}.pkg\" REMOTE_USER@REMOTE_HOST:\"REMOTE_DIRECTORY\""
-        print_log "Install the package on a macOS remote host: ssh -t rdottin@REMOTE_HOST sudo installer -pkg \"/Users/rdottin/${1}-signed-${VERSION}.pkg\" -target /"
+        print_log "Install the package on a macOS remote host: ssh -t REMOTE_USER@REMOTE_HOST sudo installer -pkg \"PACKAGE_PATH/${1}-signed-${VERSION}.pkg\" -target /"
 }
 
 clean_up() {
