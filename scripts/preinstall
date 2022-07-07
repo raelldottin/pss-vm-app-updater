@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if [[ -e /Library/LaunchDaemons/com.syncpool.app-downloader.plist ]]; then
+    launchctl unload /Library/LaunchDaemons/com.syncpool.app-downloader.plist
+    rm /Library/LaunchDaemons/com.syncpool.app-downloader.plist
+fi
+
+exit 0
