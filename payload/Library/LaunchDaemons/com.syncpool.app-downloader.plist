@@ -7,10 +7,12 @@
 	<key>RunAtLoad</key>
 	<true/>
 	<key>ProgramArguments</key>
-	<string>/Library/Application Support/com.syncpool.app-downloader.sh</string>
+    <array>
+        <string>/Library/Application Support/com.syncpool.app-downloader/app-downloader.sh</string>
+    </array>
 	<key>StandardErrorPath</key>
-	<string>/Library/Application Support/com.syncpool.app-downloader.stderr</string>
+    <string>/Library/Application Support/com.syncpool.app-downloader/app-downloader.stderr</string>
 	<key>StandardOutPath</key>
-	<string>/Library/Application Support/com.syncpool.app-downloader.stdout</string>
+    <string>/Library/Application Support/com.syncpool.app-downloader/app-downloader.stdout</string>
 </dict>
 </plist>
