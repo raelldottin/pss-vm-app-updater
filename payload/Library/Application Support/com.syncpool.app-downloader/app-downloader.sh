@@ -68,7 +68,9 @@ CheckForNetwork() {
 
 DownloadApp() {
     # Download the app from the remote host to a tmp directory
-    scp "$REMOTE_USER@$REMOTE_HOST:$appPath" "$tmpDir"
+    PrintLog "Copying $appPath from $REMOTE_HOST to $tmpDir"
+
+    launchctl asuser "$(id -u "${whoami}")" sudo -iu "${whoami}" "scp $REMOTE_USER@$REMOTE_HOST:$appPath $tmpDir"
     if [[ -d "$tmpDir$appPath" ]]; then
         PrintLog "$appName was successfully copied to $tmpDir"
     else
@@ -91,7 +93,6 @@ CheckAppVersion() {
     fi
 }
 
-whoami=$(scutil <<< "show State:/Users/ConsoleUser" | awk '/Name :/ && ! /loginwindow/ { print $3 }')
 PrintLog "$whoami is currently logged in."
 PrintLog "$(id -F) is currently executing $0"
 
