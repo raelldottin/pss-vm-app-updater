@@ -24,10 +24,12 @@ else
 fi
 
 # Global variables
+processName="Pixel Starships"
 appName="Pixel Starships.app"
 appPath="/Applications/$appName"
 installPath="/Applications"
-tmpDir="$(mktemp -d 2> /dev/null || mktemp -d -t 'mytmpdir')"
+whoami=$(scutil <<< "show State:/Users/ConsoleUser" | awk '/Name :/ && ! /loginwindow/ { print $3 }')
+tmpDir="$(launchctl asuser "$(id -u "$whoami")" sudo -iu "$whoami" mktemp -d 2> /dev/null || launchctl asuser "$(id -u "$whoami")" sudo -iu "$whoami" mktemp -d -t 'mytmpdir')"
 
 # External variables
 REMOTE_HOST=$(netstat -rnf inet | awk '{if($1=="default") print $2}')
@@ -43,9 +45,9 @@ PrintLog() {
 }
 
 CleanUpExit() {
-    if [[ -d $tmpDir ]]; then
-        PrintLog "Deleting directory: $tmpDir$appPath"
-        $RM_BIN -fr "$tmpDir$appPath"
+    if [[ -d $tmpDir/$appName ]]; then
+        PrintLog "Deleting directory: $tmpDir/$appName"
+        $RM_BIN -fr "$tmpDir/$appName"
     fi
     PrintLog "Exiting..."
     exit 1
@@ -70,8 +72,9 @@ DownloadApp() {
     # Download the app from the remote host to a tmp directory
     PrintLog "Copying $appPath from $REMOTE_HOST to $tmpDir"
 
-    launchctl asuser "$(id -u "${whoami}")" sudo -iu "${whoami}" "scp $REMOTE_USER@$REMOTE_HOST:$appPath $tmpDir"
-    if [[ -d "$tmpDir$appPath" ]]; then
+    $CHOWN_BIN "$whoami" "$tmpDir"
+    launchctl asuser "$(id -u "$whoami")" sudo -iu "$whoami" scp -r "$REMOTE_USER"@"$REMOTE_HOST":"\"$appPath\"" "$tmpDir"
+    if [[ -d "$tmpDir/$appName" ]]; then
         PrintLog "$appName was successfully copied to $tmpDir"
     else
         PrintLog "Failed to copy $appName to $tmpDir"
@@ -81,12 +84,15 @@ DownloadApp() {
 
 CheckAppVersion() {
     # Compares the version of the download app and installed app. If the app versions are the same, then the script exits cleanly
+
     if [[ ! -d "$appPath" ]]; then
         PrintLog "$appPath does not exists"
-        CleanUpExit
+        return
     fi
-    downloaded_app_version=$(defaults read "$tmpDir$appPath/Contents/Info.plist" CFBundleVersion)
+    downloaded_app_version=$(defaults read "$tmpDir/$appName/Contents/Info.plist" CFBundleVersion)
+    PrintLog "Downloaded App Version: $downloaded_app_version"
     installed_app_version=$(defaults read "$appPath/Contents/Info.plist" CFBundleVersion)
+    PrintLog "Installed App Version: $installed_app_version"
     if [[ $downloaded_app_version == "$installed_app_version" ]]; then
         PrintLog "$appName version $installed_app_version is already installed."
         CleanUpExit
@@ -110,8 +116,8 @@ DownloadApp
 CheckAppVersion
 
 # Let's check if the application is still running before terminating it, and confirm that the application actually quits
-while [[ $(pgrep "$appName") ]]; do
-    if $PKILL_BIN "$appName"; then
+while [[ $(pgrep "$processName") ]]; do
+    if $PKILL_BIN "$processName"; then
         PrintLog "Successfully terminated $appName."
     else
         PrintLog "Failed to terminate $appName"
@@ -132,7 +138,7 @@ if [[ -d "$installPath/$appName" ]]; then
 fi
 
 # Copy the new app version to the Application folder
-if rsync -azq "$tmpDir" "$installPath/"; then
+if rsync -azq "$tmpDir/$appName" "$installPath/"; then
     PrintLog "Copied $appName to $installPath folder."
 else
     PrintLog "Failed to copy $appName from $tmpDir to the /Applications folder."
@@ -141,7 +147,7 @@ else
 fi
 
 # Change permissions on the app bundle -- Note, the installation still need root access to install the app into the application folder.
-if $CHOWN_BIN -R "$whoami":staff "$installPath/$appName"; then
+if $CHOWN_BIN -R "$whoami" "$installPath/$appName"; then
     PrintLog "Providing $whoami with access to $installPath/$appName"
 else
     PrintLog "Failed to provide $whoami with access to $installPath/$appName"
@@ -153,4 +159,5 @@ else
     PrintLog "Unable to remove the quarantine flag on $appName"
 fi
 
+launchctl asuser "$(id -u "$whoami")" sudo -iu "$whoami" open -a "$appPath"
 PrintLog "Installation Successful."
