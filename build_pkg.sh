@@ -76,14 +76,14 @@ get_parent_directory() {
 add_external_variables() {
     print_log "Adding external variables to $PARENT_DIR/payload/Library/Application Support/com.syncpool.app-downloader/app-downloader.sh"
 
-    REMOTE_HOST=$(cat "${PARENT_DIR}/.env/REMOTE_HOST")
-    echo -n "Value: "
-    echo "\"${PARENT_DIR}/.env/REMOTE_HOST:REMOTE_HOST=$REMOTE_HOST\""
-    echo -n "Before change: "
-    grep -HE "^REMOTE_HOST=.*$" "$PARENT_DIR/payload/Library/Application Support/com.syncpool.app-downloader/app-downloader.sh"
-    sed -i '' "s/^REMOTE_HOST.*$/REMOTE_HOST\=\"$REMOTE_HOST\"/" "$PARENT_DIR/payload/Library/Application Support/com.syncpool.app-downloader/app-downloader.sh"
-    echo -n "After change: "
-    grep -HE "^REMOTE_HOST=.*$" "$PARENT_DIR/payload/Library/Application Support/com.syncpool.app-downloader/app-downloader.sh"
+    #REMOTE_HOST=$(cat "${PARENT_DIR}/.env/REMOTE_HOST")
+    #echo -n "Value: "
+    #echo "\"${PARENT_DIR}/.env/REMOTE_HOST:REMOTE_HOST=$REMOTE_HOST\""
+    #echo -n "Before change: "
+    #grep -HE "^REMOTE_HOST=.*$" "$PARENT_DIR/payload/Library/Application Support/com.syncpool.app-downloader/app-downloader.sh"
+    #sed -i '' "s/^REMOTE_HOST.*$/REMOTE_HOST\=\"$REMOTE_HOST\"/" "$PARENT_DIR/payload/Library/Application Support/com.syncpool.app-downloader/app-downloader.sh"
+    #echo -n "After change: "
+    #grep -HE "^REMOTE_HOST=.*$" "$PARENT_DIR/payload/Library/Application Support/com.syncpool.app-downloader/app-downloader.sh"
 
     REMOTE_USER=$(cat "${PARENT_DIR}/.env/REMOTE_USER")
     echo -n "Value: "
@@ -133,12 +133,11 @@ post_packaging() {
 remove_external_variables() {
     print_log "Removing external variables to $PARENT_DIR/payload/Library/Application Support/com.syncpool.app-downloader/app-downloader.sh"
 
-    REMOTE_HOST=$(cat "${PARENT_DIR}/.env/REMOTE_HOST")
-    echo -n "Before change: "
-    grep -HE "^REMOTE_HOST=.*$" "$PARENT_DIR/payload/Library/Application Support/com.syncpool.app-downloader/app-downloader.sh"
-    sed -i '' "s/^REMOTE_HOST.*$/REMOTE_HOST\=/" "$PARENT_DIR/payload/Library/Application Support/com.syncpool.app-downloader/app-downloader.sh"
-    echo -n "After change: "
-    grep -HE "^REMOTE_HOST=.*$" "$PARENT_DIR/payload/Library/Application Support/com.syncpool.app-downloader/app-downloader.sh"
+    #echo -n "Before change: "
+    #grep -HE "^REMOTE_HOST=.*$" "$PARENT_DIR/payload/Library/Application Support/com.syncpool.app-downloader/app-downloader.sh"
+    #sed -i '' "s/^REMOTE_HOST.*$/REMOTE_HOST\=/" "$PARENT_DIR/payload/Library/Application Support/com.syncpool.app-downloader/app-downloader.sh"
+    #echo -n "After change: "
+    #grep -HE "^REMOTE_HOST=.*$" "$PARENT_DIR/payload/Library/Application Support/com.syncpool.app-downloader/app-downloader.sh"
 
     REMOTE_USER=$(cat "${PARENT_DIR}/.env/REMOTE_USER")
     echo -n "Before change: "

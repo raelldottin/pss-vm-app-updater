@@ -30,7 +30,7 @@ installPath="/Applications"
 tmpDir="$(mktemp -d 2> /dev/null || mktemp -d -t 'mytmpdir')"
 
 # External variables
-REMOTE_HOST=
+REMOTE_HOST=$(netstat -rnf inet | awk '{if($1=="default") print $2}')
 REMOTE_USER=
 
 PrintLog() {
