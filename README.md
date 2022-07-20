@@ -14,4 +14,4 @@ machine
 - `ssh-copy-id username@remote_host`
 
 If you encounter any issues, file a issue in this repo or refer to
-(Digital Ocean article)[https://www.digitalocean.com/community/tutorials/how-to-configure-ssh-key-based-authentication-on-a-linux-server] for additional assistance.
+[Digital Ocean article](https://www.digitalocean.com/community/tutorials/how-to-configure-ssh-key-based-authentication-on-a-linux-server) for additional assistance.
